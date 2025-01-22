@@ -1,0 +1,2 @@
+# irc-chatMinimal
+Minimal chat
