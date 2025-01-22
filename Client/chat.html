@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Room</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="chat-container">
+        <div id="messages"></div>
+        <form id="message-form">
+            <input type="text" id="message-input" placeholder="Type your message..." autocomplete="off">
+            <button type="submit">Send</button>
+        </form>
+    </div>
+
+    <script>
+        // Get URL parameters 
+        const urlParams = new URLSearchParams(window.location.search);
+        const username = urlParams.get('username');
+        const room = urlParams.get('room');
+
+        if (!username || !room) {
+            window.location.href = 'rooms.html';
+            throw new Error('Redirecting to rooms page');
+        }
+
+        // create WebSocket connection
+        const socket = new WebSocket(`ws://${window.location.hostname}:3000`);
+        const messages = document.getElementById('messages');
+        const messageForm = document.getElementById('message-form');
+        const messageInput = document.getElementById('message-input');
+
+        socket.addEventListener('open', () => {
+            console.log('Connecting with username:', username, 'room:', room);
+            socket.send(JSON.stringify({
+                type: 'join',
+                username: username,
+                room: room
+            }));
+        });
+
+        socket.addEventListener('message', (event) => {
+            const data = JSON.parse(event.data);
+            const messageDiv = document.createElement('div');
+            
+            switch(data.type) {
+                case 'message':
+                    messageDiv.textContent = `${data.username}: ${data.content}`;
+                    break;
+                case 'system':
+                    messageDiv.textContent = data.content;
+                    messageDiv.className = 'system-message';
+                    break;
+                case 'error':
+                    alert(data.content);
+                    window.location.href = 'rooms.html';
+                    break;
+            }
+            
+            messages.appendChild(messageDiv);
+            messages.scrollTop = messages.scrollHeight;
+        });
+
+        messageForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const content = messageInput.value.trim();
+            if (content) {
+                socket.send(JSON.stringify({
+                    type: 'message',
+                    content: content
+                }));
+                messageInput.value = '';
+            }
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,6 @@
+{
+  "name": "irc-chat-client",
+  "version": "1.0.0",
+  "description": "IRC-like chat client",
+  "dependencies": {}
+} 

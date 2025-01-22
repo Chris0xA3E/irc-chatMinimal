@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Chat Room</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f0f2f5;
+        }
+
+        .room-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .room-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.2s;
+            text-align: center;
+        }
+
+        .room-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #1a73e8;
+        }
+
+        .room-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .room-description {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        #username-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #username {
+            padding: 8px;
+            font-size: 1em;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Choose a Chat Room</h1>
+    
+    <div id="username-container">
+        <input type="text" id="username" placeholder="Enter your username" required>
+    </div>
+
+    <div class="room-container">
+        <div class="room-card" data-room="general">
+            <div class="room-name">General</div>
+            <div class="room-description">General discussion for any topic</div>
+        </div>
+        <div class="room-card" data-room="gaming">
+            <div class="room-name">Gaming</div>
+            <div class="room-description">Gaming discussions and team-ups</div>
+        </div>
+        <div class="room-card" data-room="music">
+            <div class="room-name">Music</div>
+            <div class="room-description">Share and discuss your favorite music</div>
+        </div>
+        <div class="room-card" data-room="tech">
+            <div class="room-name">Tech</div>
+            <div class="room-description">Technology and programming discussions</div>
+        </div>
+        <div class="room-card" data-room="sports">
+            <div class="room-name">Sports</div>
+            <div class="room-description">Sports news and discussions</div>
+        </div>
+        <div class="room-card" data-room="politics">
+            <div class="room-name">Politics</div>
+            <div class="room-description">Political discussions and current events</div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.room-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const username = document.getElementById('username').value.trim();
+                if (!username) {
+                    alert('Please enter a username first!');
+                    return;
+                }
+                
+                const room = card.dataset.room;
+                console.log('Selected room:', room);
+                const params = new URLSearchParams();
+                params.append('username', username);
+                params.append('room', room);
+                
+                // Redirect to chat page with username and room parameters
+                window.location.href = `chat.html?${params.toString()}`;
+            });
+        });
+    </script>
+</body>
+</html> 
